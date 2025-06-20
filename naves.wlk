@@ -41,6 +41,8 @@ class Nave{
     self.cargarCombustible(30000)
     self.acelerar(5000)
   }
+
+  method estaTranquila() = combustible >= 4000 && velocidad <= 12000
 }
 
 class NaveBaliza inherits Nave{
@@ -57,6 +59,8 @@ class NaveBaliza inherits Nave{
     self.cambiarColorDeBaliza("verde")
     self.ponerseParaleloAlSol()
   }
+
+  override method estaTranquila() = super() && colorBaliza != "rojo"
 }
 
 class NavePasajeros inherits Nave{
@@ -80,7 +84,7 @@ class NaveCombate inherits Nave{
   var estaVisible
   // var misilesFueronDesplegados
   const misiles //[] lista de Misil
-  const mensajesEmitidos = [] //lista de strings
+  const mensajesEmitidos//lista de strings
 
   method ponerseVisible(){
     estaVisible = true
@@ -100,7 +104,7 @@ class NaveCombate inherits Nave{
     misiles.forEach({m => m.replegar()})
   }
 
-  method misilesDesplegados() = misiles.count({m => m.fueDesplegado()})
+  method misilesDesplegados() = misiles.count({m => m.estaDesplegado()})
 
 
   // method desplegarMisiles(){
@@ -137,19 +141,45 @@ class NaveCombate inherits Nave{
     self.acelerar(15000)
     self.emitirMensaje("Saliendo en mision")
   }
+
+  override method estaTranquila() = super() && self.todosLosMisilesNoEstanDesplegados()
+
+  method todosLosMisilesNoEstanDesplegados() = misiles.all({m => !m.estaDesplegado()})
 }
 
 
 class Misil{
-  var fueDesplegado
+  var estaDesplegado
 
-  method fueDesplegado() = fueDesplegado
+  method estaDesplegado() = estaDesplegado
 
   method desplegar(){
-    fueDesplegado = true
+    estaDesplegado = true
   }
 
   method replegar(){
-    fueDesplegado = false
+    estaDesplegado = false
   }
+}
+
+class NaveHospital inherits NavePasajeros{
+  const quirofanos // []
+
+  method quirofanosEstanPreparados() = quirofanos.all({quir => quir.estaPreparado()}) 
+
+  override method estaTranquila() = super() && !self.quirofanosEstanPreparados()
+}
+
+class Quirofano{
+  var estaPreparado
+
+  method estaPreparado() = estaPreparado
+
+  method prepararse(){ 
+    estaPreparado = true
+  }
+}
+
+class NaveCombateSigilosa inherits NaveCombate{
+  override method estaTranquila() = super() && estaVisible
 }
