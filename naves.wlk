@@ -203,6 +203,15 @@ class NaveHospital inherits NavePasajeros{
   method quirofanosEstanPreparados() = quirofanos.all({quir => quir.estaPreparado()}) 
 
   override method estaTranquila() = super() && !self.quirofanosEstanPreparados()
+
+  override method recibirAmenaza(){
+    super()
+    self.prepararQuirofanos()
+  }
+
+  method prepararQuirofanos(){
+    quirofanos.forEach({quir => quir.prepararse()})
+  }
 }
 
 class Quirofano{
@@ -217,4 +226,10 @@ class Quirofano{
 
 class NaveCombateSigilosa inherits NaveCombate{
   override method estaTranquila() = super() && estaVisible
+
+  override method escapar(){
+    super()
+    self.desplegarMisiles()
+    self.ponerseInvisible()
+  }
 }
