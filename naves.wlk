@@ -43,6 +43,14 @@ class Nave{
   }
 
   method estaTranquila() = combustible >= 4000 && velocidad <= 12000
+
+  method recibirAmenaza(){
+    self.escapar()
+    self.avisar()
+  }
+
+  method escapar()
+  method avisar()
 }
 
 class NaveBaliza inherits Nave{
@@ -61,6 +69,13 @@ class NaveBaliza inherits Nave{
   }
 
   override method estaTranquila() = super() && colorBaliza != "rojo"
+
+  override method escapar(){
+    self.irHaciaElSol()
+  }
+  override method avisar(){
+    self.cambiarColorDeBaliza("rojo")
+  }
 }
 
 class NavePasajeros inherits Nave{
@@ -78,6 +93,17 @@ class NavePasajeros inherits Nave{
     cantRacBebida = 6 * cantPasajeros
     self.acercarseUnPocoAlSol()
   }
+
+  override method escapar(){
+    self.acelerar(velocidad * 2)
+
+  }
+  override method avisar(){
+    cantRacComida = 0.min(cantRacComida - cantPasajeros)
+    cantRacBebida = 0.min(cantRacBebida - (cantPasajeros * 2))
+  }
+
+ 
 }
 
 class NaveCombate inherits Nave{
@@ -145,6 +171,15 @@ class NaveCombate inherits Nave{
   override method estaTranquila() = super() && self.todosLosMisilesNoEstanDesplegados()
 
   method todosLosMisilesNoEstanDesplegados() = misiles.all({m => !m.estaDesplegado()})
+
+  override method escapar(){
+    self.acercarseUnPocoAlSol()
+    self.acercarseUnPocoAlSol()
+  }
+
+  override method avisar(){
+    self.emitirMensaje("Amenaza recibida")
+  }
 }
 
 
