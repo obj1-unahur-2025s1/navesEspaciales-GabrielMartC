@@ -51,15 +51,19 @@ class Nave{
 
   method escapar()
   method avisar()
+
+  method estaDeRelajo() = self.estaTranquila()
 }
 
 class NaveBaliza inherits Nave{
   var colorBaliza
+  var nuncaSeCambioElColor = true
 
   method colorBaliza() = colorBaliza
 
   method cambiarColorDeBaliza(colorNuevo){
     colorBaliza = colorNuevo
+    nuncaSeCambioElColor = false
   }
 
   override method prepararViaje(){
@@ -76,12 +80,15 @@ class NaveBaliza inherits Nave{
   override method avisar(){
     self.cambiarColorDeBaliza("rojo")
   }
+
+  override method estaDeRelajo() = super() && nuncaSeCambioElColor
 }
 
 class NavePasajeros inherits Nave{
   var cantPasajeros
   var cantRacComida
   var cantRacBebida
+  var cantRacComidaServidas = 0
 
   method cantPasajeros() = cantPasajeros
   method cantRacComida() = cantRacComida
@@ -101,14 +108,15 @@ class NavePasajeros inherits Nave{
   override method avisar(){
     cantRacComida = 0.min(cantRacComida - cantPasajeros)
     cantRacBebida = 0.min(cantRacBebida - (cantPasajeros * 2))
+    cantRacComidaServidas += 0.min(cantRacComida - cantPasajeros)
   }
 
- 
+  override method estaDeRelajo() = super() && cantRacComidaServidas < 50
+
 }
 
 class NaveCombate inherits Nave{
   var estaVisible
-  // var misilesFueronDesplegados
   const misiles //[] lista de Misil
   const mensajesEmitidos//lista de strings
 
@@ -132,16 +140,6 @@ class NaveCombate inherits Nave{
 
   method misilesDesplegados() = misiles.count({m => m.estaDesplegado()})
 
-
-  // method desplegarMisiles(){
-  //   misilesFueronDesplegados = true
-  // }
-
-  // method replegarMisiles(){
-  //   misilesFueronDesplegados = false
-  // }
-
-  // method misilesDesplegados() = misilesFueronDesplegados
 
   method emitirMensaje(mensaje){
     mensajesEmitidos.add(mensaje)
