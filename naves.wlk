@@ -1,6 +1,7 @@
 class Nave{
   var velocidad
   var direccionSol //int -10, 0 o 10
+  var combustible
 
   method acelerar(cuanto){
     velocidad = 10000.min(velocidad + cuanto)
@@ -28,7 +29,18 @@ class Nave{
     direccionSol = -10.max(direccionSol - 1)
   }
 
-  method prepararViaje()
+  method cargarCombustible(unaCantidad) {
+    combustible = combustible + unaCantidad
+  }
+
+  method descargarCombustible(unaCantidad) {
+    combustible = 0.max(combustible - unaCantidad)
+  }
+
+  method prepararViaje(){
+    self.cargarCombustible(30000)
+    self.acelerar(5000)
+  }
 }
 
 class NaveBaliza inherits Nave{
@@ -41,6 +53,7 @@ class NaveBaliza inherits Nave{
   }
 
   override method prepararViaje(){
+    super()
     self.cambiarColorDeBaliza("verde")
     self.ponerseParaleloAlSol()
   }
@@ -56,6 +69,7 @@ class NavePasajeros inherits Nave{
   method cantRacBebida() =  cantRacBebida
 
   override method prepararViaje(){
+    super()
     cantRacComida = 4 * cantPasajeros
     cantRacBebida = 6 * cantPasajeros
     self.acercarseUnPocoAlSol()
@@ -117,6 +131,7 @@ class NaveCombate inherits Nave{
   method emitioAlgunMensaje() = mensajesEmitidos.size() > 0
 
   override method prepararViaje(){
+    super()
     self.ponerseVisible()
     self.replegarMisiles()
     self.acelerar(15000)
